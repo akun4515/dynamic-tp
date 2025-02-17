@@ -17,6 +17,7 @@
 
 package org.dromara.dynamictp.core.monitor.collector.jmx;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.dynamictp.common.em.CollectorTypeEnum;
 import org.dromara.dynamictp.common.entity.ThreadPoolStats;
@@ -48,8 +49,8 @@ public class JMXCollector extends AbstractCollector {
     @Override
     public void collect(ThreadPoolStats threadPoolStats) {
         if (GAUGE_CACHE.containsKey(threadPoolStats.getPoolName())) {
-            ThreadPoolStats poolStats = GAUGE_CACHE.get(threadPoolStats.getPoolName());
-            BeanCopierUtil.copyProperties(threadPoolStats, poolStats);
+            Gson gson = new Gson();
+            GAUGE_CACHE.put(threadPoolStats.getPoolName(), gson.fromJson(gson.toJson(threadPoolStats), ThreadPoolStats.class));
         } else {
             try {
                 MBeanServer server = ManagementFactory.getPlatformMBeanServer();

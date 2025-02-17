@@ -18,6 +18,7 @@
 package org.dromara.dynamictp.core.notifier;
 
 import com.google.common.base.Joiner;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -181,8 +182,8 @@ public abstract class AbstractDtpNotifier implements DtpNotifier {
     }
 
     private NotifyPlatform newTargetPlatform(NotifyPlatform platform) {
-        NotifyPlatform targetPlatform = new NotifyPlatform();
-        BeanCopierUtil.copyProperties(platform, targetPlatform);
+        Gson gson = new Gson();
+        NotifyPlatform targetPlatform = gson.fromJson(gson.toJson(gson.toJson(platform)), NotifyPlatform.class);
 
         BaseNotifyCtx context = DtpNotifyCtxHolder.get();
         NotifyItem item = context.getNotifyItem();
